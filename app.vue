@@ -1,32 +1,44 @@
 <script setup lang="ts">
 import { type BikelineDataRow } from './model/bikelineData';
 
+const step = ref(0)
 
-const shuffleHandler = useShuffelHandler()
-const items = shuffleHandler.shuffleItems;
+const dataHandler = useDataHandler()
 
+const nextStep = () => {
+  step.value++
+}
 
-
-const choosenRow = ref<BikelineDataRow | undefined>(undefined)
+const prevStep = () => {
+  step.value--
+}
 
 </script>
 
 <template>
-  <main class="p-2 h-screen flex flex-col" id="main">
-    <div class="h-full overflow-scroll">
-      <BikelineList :items="items" :scrollToId="choosenRow?.id" class="mb-24" />
+  <main class="p-2 h-screen flex flex-col">
+    <ul v-auto-animate class="h-full *:h-full">
+      <li v-if="step === 0">
+        <CSVInput :step="0" @update:modelValue="dataHandler.uploadData1($event)" @nextStep="nextStep"
+          @prevStep="prevStep" :showPrev="false"
+          description="Upload the CSV file from the last bikeline shuffling (probably one week ago). Just go to next step if the file is correct." />
+      </li>
+      <li v-else-if="step === 1">
+        <CSVInput :step="1" @update:modelValue="dataHandler.uploadData2($event)" @nextStep="nextStep"
+          @prevStep="prevStep" description="Upload the CSV file from the current bikeline shuffling" />
+
+      </li>
+      <li v-else-if="step === 2">
+        <Shuffle />
+      </li>
+    </ul>
+    <div v-if="step !== 2" class="flex justify-center">
+      <ul class="steps *:cursor-pointer">
+        <li class="step" :class="{ 'step-info': step >= 0 }" @click="step = 0">previour CSV data</li>
+        <li class="step" :class="{ 'step-info': step >= 1 }" @click="step = 1">current CSV data</li>
+        <li class="step" :class="{ 'step-info': step >= 2 }" @click="step = 2">Shuffle and choose random</li>
+      </ul>
     </div>
-    <nav class="fixed bottom-0 left-0 w-full backdrop-blur-md bg-base-content/30">
-      <div class="flex justify-between max-w-sm mx-auto my-4 gap-2">
-        <button class="btn btn-primary w-1/2" @click="shuffleHandler.shuffel()">Shuffle</button>
-        <button class="btn btn-primary w-1/2" @click="choosenRow = shuffleHandler.getRandRow()">
-          Choose Random
-        </button>
-        <span class="fixed bottom-0 right-0 p-2 ">
-          Items: {{ items?.length }}
-        </span>
-      </div>
-    </nav>
   </main>
 </template>
 
