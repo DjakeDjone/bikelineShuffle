@@ -36,20 +36,21 @@ export const useDataHandler = () => {
         let diffData = data2.value;
         lastData.value = data2.value;
         if (data1.value) {
-            diffData = calcDiffData(data2.value, data1.value);
+            diffData = calcDiffData(data1.value, data2.value);
         }
         console.log(diffData);
 
         shuffler.uploadData(diffData);
     }
-    const calcDiffData = (data1: BikelineData, data2: BikelineData): BikelineData => {
+    const calcDiffData = (d1: BikelineData, d2: BikelineData): BikelineData => {
         const diffData: BikelineData = {
             rows: [],
             date: new Date(),
-            filename: data2.filename
+            filename: d2.filename
         }
-        data2.rows.forEach(row2 => {
-            const row1 = data1.rows.find(r => r.id === row2.id);
+        // subtract the values like km, hm, trips from d1 from d2
+        d2.rows.forEach(row2 => {
+            const row1 = d1.rows.find(r => r.name === row2.name);
             if (row1) {
                 diffData.rows.push({
                     id: row2.id,
@@ -57,6 +58,14 @@ export const useDataHandler = () => {
                     km: row2.km - row1.km,
                     hm: row2.hm - row1.hm,
                     trips: row2.trips - row1.trips
+                })
+            } else {
+                diffData.rows.push({
+                    id: row2.id,
+                    name: row2.name,
+                    km: row2.km,
+                    hm: row2.hm,
+                    trips: row2.trips
                 })
             }
         })
