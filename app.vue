@@ -43,7 +43,7 @@ const formatLastDataFileName = (file: BikelineData | null): string | undefined =
 
       </li>
       <li v-else-if="step === 2">
-        <Shuffle />
+        <Shuffle @nextStep="nextStep" @prevStep="prevStep" />
       </li>
     </ul>
     <div v-if="step !== 2" class="flex justify-center">

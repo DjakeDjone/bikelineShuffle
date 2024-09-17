@@ -2,12 +2,18 @@
 import type { BikelineDataRow } from '~/model/bikelineData';
 
 
+
 const shuffleHandler = useShuffelHandler()
 const items = shuffleHandler.shuffleItems;
 
 
 
 const choosenRow = ref<BikelineDataRow | undefined>(undefined)
+const emit = defineEmits(['nextStep', 'prevStep'])
+
+const stepBack = () => {
+    emit('prevStep')
+}
 
 </script>
 
@@ -35,6 +41,12 @@ const choosenRow = ref<BikelineDataRow | undefined>(undefined)
             </div>
             <span class="fixed bottom-0 right-0 p-2 ">
                 Items: {{ items?.length }}
+            </span>
+            <span class="fixed bottom-0 left-0 p-2 ">
+                <button @click="stepBack()" class="btn btn-accent m-2">
+                    <Icon name="mdi:restart" size="20" />
+                    Back
+                </button>
             </span>
         </nav>
     </div>
