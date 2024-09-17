@@ -2,7 +2,7 @@ import type { BikelineData, ShuffleItem } from "~/model/bikelineData";
 
 
 export const useShuffelHandler = () => {
-    const data = ref<BikelineData>({
+    const data = useState<BikelineData>("bikelineData", () => ({
         rows: [
             { id: "1", name: "A", km: 1, hm: 1, trips: 1 },
             { id: "2", name: "B", km: 2, hm: 2, trips: 2 },
@@ -20,10 +20,9 @@ export const useShuffelHandler = () => {
             { id: "14", name: "N", km: 14, hm: 14, trips: 14 },
             { id: "15", name: "O", km: 15, hm: 15, trips: 15 },
         ],
-        date: new Date()
-    })
-
-    const shuffleItems = ref<ShuffleItem[]>()
+        date: new Date(),
+        filename: "testdata.csv"
+    }))
 
     const getShuffleItems = (d: BikelineData): ShuffleItem[] => {
         const shuffleItems: ShuffleItem[] = []
@@ -42,11 +41,24 @@ export const useShuffelHandler = () => {
         return shuffleItems
     }
 
+    const shuffleItems = ref<ShuffleItem[]>(getShuffleItems(data.value))
+
+    const uploadData = (d: BikelineData) => {
+        data.value = d
+        console.log(data.value);
+        shuffleItems.value = getShuffleItems(d);
+        console.log("SHUFFLE ITEMS:", shuffleItems.value);
+
+    }
+
+
+
     const shuffel = () => {
         if (!shuffleItems.value) {
             shuffleItems.value = getShuffleItems(data.value)
         }
         shuffleItems.value.sort(() => Math.random() - 0.5)
+
     }
 
     const getRandRow = () => {
@@ -56,10 +68,18 @@ export const useShuffelHandler = () => {
         return shuffleItems.value[Math.floor(Math.random() * shuffleItems.value.length)]
     }
 
+    const removeItem = (id: string) => {
+        if (shuffleItems.value) {
+            shuffleItems.value = shuffleItems.value.filter(item => item.id !== id)
+        }
+    }
+
     return {
         data,
         shuffleItems,
         shuffel,
-        getRandRow
+        getRandRow,
+        uploadData,
+        removeItem
     }
 }

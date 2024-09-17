@@ -3,7 +3,7 @@
 export type BikelineData = {
     rows: BikelineDataRow[];
     date: Date;
-
+    filename: string;
 }
 
 export type BikelineDataRow = {

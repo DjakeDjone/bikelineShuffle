@@ -1,20 +1,32 @@
-import type { BikelineData } from "~/model/bikelineData"
+import type { BikelineData, BikelineDataRow } from "~/model/bikelineData"
 
 
-export const parseBikelineData = (data: string): BikelineData => {
+
+export const parseBikelineData = (data: string, filename: string): BikelineData => {
     // data in csv format
-    const rows = data.split("\n").map(row => {
-        const [id, name, km, hm, trips] = row.split(";")
+    // "Nachname";"Vorname";"Schule";"Typ";"Geschlecht";"WBTW: Fahrten [#]";"WBTW: Distanz [km]";"WBTW: Anstieg [Hm]";"Jahr: Fahrten [#]";"Jahr: Distanz [km]";"Jahr: Anstieg [Hm]"
+    const lines = data.split("\n").filter(line => line.length > 0);
+    const header = lines.shift()!.split(";")
+    const entries = lines.map(line => {
+        const values = line.split(";")
+        // remove '"' from values
+        values.forEach((value, index) => {
+            values[index] = value.replace(/"/g, "")
+        })
+
+        console.log(values);
+
         return {
-            id,
-            name,
-            km: parseFloat(km),
-            hm: parseFloat(hm),
-            trips: parseInt(trips)
-        }
-    })
+            id: Math.random().toString(36).substring(7),
+            name: `${values[1]} ${values[0]}`,
+            km: parseFloat(values[6].replace(",", ".")),
+            hm: parseFloat(values[7].replace(",", ".")),
+            trips: parseInt(values[5])
+        } as BikelineDataRow
+    });
     return {
-        rows,
-        date: new Date()
+        rows: entries,
+        date: new Date(),
+        filename: filename
     }
 }

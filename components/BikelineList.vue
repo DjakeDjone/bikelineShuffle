@@ -36,7 +36,7 @@ watch(() => props.scrollToId, (id) => {
         <li v-for="item in items" :key="item.id">
             <div class="w-full btn btn-primary" :id="item.id" :class="{ '!btn-secondary': item.id === scrollToId }">
                 {{ item.name }}
-                {{ item.hm }}
+                ({{ item.trips }} Fahrten)
             </div>
         </li>
     </TransitionGroup>
