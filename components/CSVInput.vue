@@ -34,11 +34,12 @@ const handleChange = (e: Event) => {
     if (file) {
         const reader = new FileReader();
         reader.onload = (e) => {
-            const content = e.target?.result as string;
+            const content = e.target?.result as ArrayBuffer;
+            const decoder = new TextDecoder('utf-8'); // utf-8 is the default
+            const decoded = decoder.decode(content);
             modelFileName.value = file.name;
-            model.value = content;
+            model.value = decoded;
         };
-        reader.readAsText(file);
     }
 };
 
