@@ -1,8 +1,8 @@
 [package]
-name = "bikelineShuffler"
+name = "app"
 version = "0.1.1"
-description = "An app to shuffle and randomly select a winner for the bikeline"
-authors = ["DjakeDjone"]
+description = "A Tauri App"
+authors = ["you"]
 license = ""
 repository = ""
 default-run = "app"
