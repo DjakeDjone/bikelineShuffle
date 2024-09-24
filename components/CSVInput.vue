@@ -28,18 +28,38 @@ const emmits = defineEmits([
     'deleteFile'
 ]);
 
+// const handleChange = (e: Event) => {
+//     const target = e.target as HTMLInputElement;
+//     const file = target.files?.item(0);
+//     if (file) {
+//         const reader = new FileReader();
+//         reader.onload = (e) => {
+//             const content = e.target?.result as string;
+//             modelFileName.value = file.name;
+//             model.value = content;
+//         };
+//         reader.readAsText(file);
+//     }
+// };
 const handleChange = (e: Event) => {
     const target = e.target as HTMLInputElement;
     const file = target.files?.item(0);
     if (file) {
+        console.log(file);
+
         const reader = new FileReader();
         reader.onload = (e) => {
+            console.log("onload");
+
             const content = e.target?.result as ArrayBuffer;
-            const decoder = new TextDecoder('utf-8'); // utf-8 is the default
+            // it's german but with a lot of special characters
+            const decoder = new TextDecoder('windows-1252');
             const decoded = decoder.decode(content);
             modelFileName.value = file.name;
             model.value = decoded;
         };
+
+        reader.readAsArrayBuffer(file);
     }
 };
 
@@ -48,7 +68,7 @@ const handleChange = (e: Event) => {
 <template>
     <div class="h-full w-full flex flex-col gap-4 justify-center items-center">
         <h1 class="text-2xl font-bold">
-            CSV Daten für Schritt {{ (step ?? 0) + 1 }}
+            CSV Daten hochladen
         </h1>
         <p class="p-2 text-center max-w-md text-pretty">{{ description }}</p>
 
@@ -67,9 +87,9 @@ const handleChange = (e: Event) => {
 
         <input type="file" class="file-input" @change="handleChange" />
         <div class="join gap-1">
-            <button class="btn btn-primary join-item" @click="$emit('prevStep')" :disabled="!showPrev">Zurück</button>
+            <button class="btn btn-primary join-item" @click="$emit('prevStep')" :disabled="!showPrev">Prev</button>
             <button class="btn btn-primary join-item" @click="$emit('nextStep')" :disabled="!showNext">
-                Weiter</button>
+                Next</button>
         </div>
     </div>
 </template>

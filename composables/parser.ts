@@ -13,7 +13,6 @@ export const parseBikelineData = (data: string, filename: string): BikelineData 
         values.forEach((value, index) => {
             values[index] = value.replace(/"/g, "")
         })
-        console.log(values);
 
 
         return {

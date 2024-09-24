@@ -37,7 +37,6 @@ export const useDataHandler = () => {
         data2.value = null;
     }
     const uploadData2 = (data: string | undefined, filename: string) => {
-        console.log("D", data, filename);
         if (!data) {
             return;
         }
