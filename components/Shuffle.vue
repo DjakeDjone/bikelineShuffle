@@ -30,13 +30,13 @@ const stepBack = () => {
                 </button>
                 <button class="btn btn-primary text-nowrap min-w-fit" @click="choosenRow = shuffleHandler.getRandRow()">
                     <span>
-                        {{ choosenRow ? '' : 'Choose Random' }}
+                        {{ choosenRow ? '' : 'Zufällige Auswahl' }}
                     </span>
                     <Icon name="game-icons:perspective-dice-six-faces-random" size="30" />
                 </button>
                 <button v-if="choosenRow" class="btn btn-primary"
                     @click="shuffleHandler.removeItem(choosenRow.id); choosenRow = undefined">
-                    Remove
+                    Entfernen
                 </button>
             </div>
             <span class="fixed bottom-0 right-0 p-2 ">
@@ -45,7 +45,7 @@ const stepBack = () => {
             <span class="fixed bottom-0 left-0 p-2 ">
                 <button @click="stepBack()" class="btn btn-accent m-2">
                     <Icon name="mdi:restart" size="20" />
-                    Back
+                    Zurück
                 </button>
             </span>
         </nav>

@@ -5,14 +5,19 @@ import { useStorage } from '@vueuse/core';
 export const useDataHandler = () => {
     const shuffler = useShuffelHandler();
     //
-    const lastData = useStorage<BikelineData>("lastData", {
+    const lastData1 = useStorage<BikelineData>("lastData", {
         rows: [] as BikelineDataRow[],
         date: new Date(),
         filename: "lastData.csv"
     })
+    const lastData2 = useStorage<BikelineData>("lastData2", {
+        rows: [] as BikelineDataRow[],
+        date: new Date(),
+        filename: "lastData2.csv"
+    })
 
-    const data1 = ref<BikelineData | null>(lastData.value);
-    const data2 = ref<BikelineData>();
+    const data1 = ref<BikelineData | null>(lastData1.value);
+    const data2 = ref<BikelineData | null>(lastData2.value);
 
 
     const uploadData1 = (data: string | undefined, filename: string) => {
@@ -26,15 +31,26 @@ export const useDataHandler = () => {
 
         data1.value = null;
     }
+    const reset = () => {
+        // restore last data
+        data1.value = lastData1.value;
+        data2.value = null;
+    }
     const uploadData2 = (data: string | undefined, filename: string) => {
+        console.log("D", data, filename);
         if (!data) {
             return;
         }
+
         data2.value = parseBikelineData(data, filename);
 
         // calc data for shuffler with data2 - data1
         let diffData = data2.value;
-        lastData.value = data2.value;
+        lastData1.value.date = diffData?.date || new Date();
+        lastData1.value.rows = diffData?.rows || [];
+        lastData1.value.filename = diffData?.filename || "lastData.csv";
+        console.log("lastData1", lastData1.value);
+
         if (data1.value) {
             diffData = calcDiffData(data1.value, data2.value);
         }
@@ -75,9 +91,11 @@ export const useDataHandler = () => {
     return {
         data1,
         data2,
-        lastData,
+        lastData1,
+        lastData2,
         uploadData1,
         uploadData2,
-        removeData1
+        removeData1,
+        reset
     }
 }
