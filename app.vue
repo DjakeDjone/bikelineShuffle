@@ -4,6 +4,36 @@ import { type BikelineData, type BikelineDataRow } from './model/bikelineData';
 const step = ref(0)
 
 const dataHandler = useDataHandler()
+const shuffleHandler = useShuffelHandler()
+
+const scaleApp = (scale: number) => {
+  // increase the font size of the whole app
+  document.documentElement.style.fontSize = `${scale * 100}%`
+}
+
+onMounted(() => {
+  scaleApp(shuffleHandler.settings.value.scale)
+  // zoom
+  // watch on ctrl + mousewheel or ctrl + +/-
+  window.addEventListener('wheel', (e) => {
+    if (e.ctrlKey) {
+      e.preventDefault()
+      const scale = shuffleHandler.settings.value.scale + (e.deltaY > 0 ? 0.1 : -0.1)
+      shuffleHandler.settings.value.scale = scale;
+      scaleApp(scale)
+    }
+  })
+
+  window.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && (e.key === '+' || e.key === '-')) {
+      e.preventDefault()
+      const scale = shuffleHandler.settings.value.scale + (e.key === '+' ? 0.1 : -0.1)
+      shuffleHandler.settings.value.scale = scale;
+      scaleApp(scale)
+    }
+  })
+})
+
 
 const nextStep = () => {
   step.value++

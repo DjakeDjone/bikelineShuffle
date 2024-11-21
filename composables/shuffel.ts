@@ -1,7 +1,15 @@
 import type { BikelineData, ShuffleItem } from "~/model/bikelineData";
 
+interface Settings {
+    fontSize: number;
+    scale: number;
+}
 
 export const useShuffelHandler = () => {
+    const settings = useState<Settings>("settings", () => ({
+        fontSize: 20,
+        scale: 1
+    }))
     const data = useState<BikelineData>("bikelineData", () => ({
         rows: [
             { id: "1", name: "A", km: 1, hm: 1, trips: 1 },
@@ -58,7 +66,6 @@ export const useShuffelHandler = () => {
             shuffleItems.value = getShuffleItems(data.value)
         }
         shuffleItems.value.sort(() => Math.random() - 0.5)
-
     }
 
     const getRandRow = () => {
@@ -75,11 +82,12 @@ export const useShuffelHandler = () => {
     }
 
     return {
+        settings,
         data,
         shuffleItems,
         shuffel,
         getRandRow,
         uploadData,
-        removeItem
+        removeItem,
     }
 }

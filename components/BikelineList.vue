@@ -17,13 +17,12 @@ watch(() => props.scrollToId, (id) => {
         console.log('scroll to', id, el);
 
         if (el) {
-            el.scrollIntoView(
-                {
-                    behavior: 'smooth',
-                    block: 'center',
-                    inline: 'center'
-                }
-            )
+            // scroll to the element so that it is in the middle of the screen
+            el.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center',
+                inline: 'center'
+            })
         }
     }
 })
@@ -31,15 +30,25 @@ watch(() => props.scrollToId, (id) => {
 </script>
 
 <template>
-    <TransitionGroup name="list" tag="ul"
-        class="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-        <li v-for="item in items" :key="item.id">
-            <div class="w-full btn btn-primary" :id="item.id" :class="{ '!btn-secondary': item.id === scrollToId }">
-                {{ item.name }}
-                ({{ item.trips }} Fahrten)
-            </div>
-        </li>
-    </TransitionGroup>
+    <main>
+        <div v-if="props.scrollToId != undefined"
+            class="w-full h-32 bg-base-200 rounded-lg flex justify-center items-center">
+        </div>
+        <TransitionGroup name="list" tag="ul"
+            class="grid grid-cols-1 gap-2 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
+            <li v-for="item in items" :key="item.id" :class="{ 'selected-item': props.scrollToId === item.id }">
+                <div class="w-full flex flex-col btn btn-primary" :id="item.id"
+                    :class="{ '!btn-secondary': item.id === scrollToId }">
+                    <p>
+                        {{ item.name }}
+                    </p>
+                    <i>
+                        ({{ item.trips }} Fahrten)
+                    </i>
+                </div>
+            </li>
+        </TransitionGroup>
+    </main>
 </template>
 
 <style>
@@ -61,4 +70,11 @@ watch(() => props.scrollToId, (id) => {
 .list-leave-active {
     position: absolute;
 }
+
+/* .selected-item {
+    transition: all 3s ease-in-out;
+    top: -50%;
+    left: -50%;
+    transform: translateX(50%) translateY(50%);
+} */
 </style>
